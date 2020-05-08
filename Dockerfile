@@ -1,4 +1,8 @@
 FROM node:12-slim AS base
+
+RUN apt-get update \
+    && apt-get install -y wget gnupg
+
 WORKDIR /usr/app
 RUN npm set progress=false && \
     npm config set depth 0
