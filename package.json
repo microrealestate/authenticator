@@ -1,0 +1,40 @@
+{
+  "name": "authenticator",
+  "version": "1.0.0",
+  "description": "Authenticator service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon -w lib -w index.js --inspect=0.0.0.0:9226 index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/microrealestate/authenticator.git"
+  },
+  "keywords": [
+    "jwt",
+    "token",
+    "refresh token",
+    "authentication"
+  ],
+  "author": "Camel Aissani",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/microrealestate/authenticator/issues"
+  },
+  "homepage": "https://github.com/microrealestate/authenticator#readme",
+  "devDependencies": {
+    "nodemon": "2.0.3"
+  },
+  "dependencies": {
+    "bcrypt": "4.0.1",
+    "body-parser": "1.19.0",
+    "cookie-parser": "1.4.5",
+    "express": "4.17.1",
+    "express-winston": "2.6.0",
+    "jsonwebtoken": "8.5.1",
+    "mongoose": "5.9.10",
+    "redis": "3.0.2",
+    "winston": "2.4.4"
+  }
+}
