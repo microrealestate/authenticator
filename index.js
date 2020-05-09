@@ -79,7 +79,7 @@ process.on('SIGINT', async () => {
 (async () => {
     // Connect to Redis
     try {
-        await redisClient.connect(config.TOKEN_DB_URL, { password: config.TOKEN_DB_PASSWORD });
+        await redisClient.connect(config.TOKEN_DB_URL, config.TOKEN_DB_PASSWORD ? { password: config.TOKEN_DB_PASSWORD } : undefined);
         await redisClient.monitor();
     } catch (exc) {
         logger.error(exc);
