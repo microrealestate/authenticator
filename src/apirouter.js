@@ -211,4 +211,4 @@ apiRouter.patch('/resetpassword', async (req, res) => {
     res.sendStatus(200);
 });
 
-module.exports = apiRouter
+module.exports = apiRouter;

@@ -5,9 +5,9 @@ const bodyParser = require('body-parser');
 const expressWinston = require('express-winston');
 const logger = require('winston');
 const mongoose = require('mongoose');
-const config = require('./lib/config');
-const redisClient = require('./lib/redisclient');
-const apiRouter = require('./lib/apirouter');
+const config = require('./config');
+const redisClient = require('./redisclient');
+const apiRouter = require('./apirouter');
 
 const startApplication = async apiRouter => {
     // configure default logger
@@ -17,7 +17,7 @@ const startApplication = async apiRouter => {
         colorize: true
     });
 
-    logger.debug('starting rest API...');
+    logger.debug('starting service...');
     const app = express();
 
     // Express log through out winston
@@ -55,7 +55,7 @@ const startApplication = async apiRouter => {
     // parse application/json
     app.use(bodyParser.json());
 
-    // exposed api
+    // expose api
     app.use(apiRouter);
 
     await app.listen(config.PORT).on('error', (error) => {
@@ -88,7 +88,7 @@ process.on('SIGINT', async () => {
 
     // Connect to Mongo
     try {
-        await mongoose.connect(config.BASE_DB_URL);
+        await mongoose.connect(config.BASE_DB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
     } catch (exc) {
         logger.error(exc);
         await redisClient.quit();
@@ -97,12 +97,11 @@ process.on('SIGINT', async () => {
 
     // Run server
     try {
-        const app = await startApplication(apiRouter);
+        await startApplication(apiRouter);
         logger.debug(`Rest API listening on port ${config.PORT}`);
-        logger.debug('Rest API ready');
         logger.info(`NODE_ENV ${process.env.NODE_ENV}`);
         logger.info(`Databases ${[config.TOKEN_DB_URL, config.BASE_DB_URL].join(', ')}`);
-        logger.info('Authenticator ready');
+        logger.info('Authenticator service ready');
     } catch (exc) {
         logger.error(exc.message);
         await Promise.all[

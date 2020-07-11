@@ -1,19 +1,19 @@
-FROM node:12-slim AS base
+FROM node:12-slim
 
-RUN apt-get update \
-    && apt-get install -y wget gnupg \
-    && apt-get install -y build-essential \
-    && apt-get install -y python
+RUN apt-get update && \
+    apt-get install -y wget gnupg && \
+    apt-get install -y build-essential && \
+    apt-get install -y python
 
 WORKDIR /usr/app
+COPY src src
+COPY package.json .
+COPY package-lock.json .
+COPY LICENSE .
+
 RUN npm set progress=false && \
-    npm config set depth 0
-COPY . .
+    npm config set depth 0 && \
+    npm install forever -g --silent && \
+    npm ci --silent --only=production
 
-FROM base as dependencies
-RUN npm install --silent --only=production
-
-FROM base AS release
-RUN npm install forever -g --silent
-COPY --from=dependencies /usr/app .
-CMD forever ./index.js
+CMD forever ./src/index.js
