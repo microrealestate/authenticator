@@ -34,6 +34,7 @@
     "express": "4.17.1",
     "express-winston": "2.6.0",
     "jsonwebtoken": "8.5.1",
+    "locale": "0.1.0",
     "mongoose": "5.9.10",
     "redis": "3.0.2",
     "winston": "2.4.4"

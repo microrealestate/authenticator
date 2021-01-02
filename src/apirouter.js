@@ -2,6 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const axios = require('axios');
+const locale = require('locale');
 const logger = require('winston');
 const config = require('./config');
 const redisClient = require('./redisclient');
@@ -52,6 +53,9 @@ const _clearTokens = async refreshToken => {
 }
 
 const apiRouter = express.Router();
+
+// parse locale
+apiRouter.use(locale(['fr-FR', 'en-US', 'pt-BR'], 'en-US'));
 
 apiRouter.post('/signup', async (req, res) => {
     try {
@@ -166,7 +170,7 @@ apiRouter.post('/forgotpassword', async (req, res) => {
                 }
             }, {
                 headers: {
-                    'Application-Locale': 'en-US' // TODO use the user locale
+                    'Accept-Language': req.locale
                 }
             });
         }
