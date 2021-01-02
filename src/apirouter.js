@@ -170,7 +170,7 @@ apiRouter.post('/forgotpassword', async (req, res) => {
                 }
             }, {
                 headers: {
-                    'Accept-Language': req.locale
+                    'Accept-Language': req.rawLocale.code
                 }
             });
         }
