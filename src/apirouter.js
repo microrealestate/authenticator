@@ -8,6 +8,13 @@ const config = require('./config');
 const redisClient = require('./redisclient');
 const AccountModel = require('./models/account');
 
+const refreshTokenCookieAttributes = {
+    httpOnly: true,
+    sameSite: true,
+    secure: config.DOMAIN !== 'localhost',
+    domain: config.DOMAIN
+};
+
 const _generateTokens = async dbAccount => {
     const { _id, password, ...account } = dbAccount;
     const refreshToken = jwt.sign({ account }, config.REFRESH_TOKEN_SECRET);
@@ -96,8 +103,8 @@ apiRouter.post('/signin', async (req, res) => {
 
         const { refreshToken, accessToken } = await _generateTokens(account.toObject());
 
-        logger.debug(`create a new refresh token ${refreshToken}`);
-        res.cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: true/*, secure: true*/ });
+        logger.debug(`create a new refresh token ${refreshToken} for domain ${req.hostname}`);
+        res.cookie('refreshToken', refreshToken, refreshTokenCookieAttributes);
         res.json({
             accessToken
         });
@@ -120,7 +127,7 @@ apiRouter.post('/refreshtoken', async (req, res) => {
             return res.sendStatus(403);
         }
 
-        res.cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: true/*, secure: true*/ });
+        res.cookie('refreshToken', refreshToken, refreshTokenCookieAttributes);
         res.json({
             accessToken
         });
@@ -139,7 +146,7 @@ apiRouter.delete('/signout', async (req, res) => {
     }
 
     try {
-        res.clearCookie('refreshToken', { httpOnly: true, sameSite: true/*, secure: true*/ });
+        res.clearCookie('refreshToken', refreshTokenCookieAttributes);
         await _clearTokens(refreshToken);
         res.sendStatus(204);
     } catch (exc) {
