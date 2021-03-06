@@ -64,22 +64,24 @@ const apiRouter = express.Router();
 // parse locale
 apiRouter.use(locale(['fr-FR', 'en-US', 'pt-BR'], 'en-US'));
 
-apiRouter.post('/signup', async (req, res) => {
-    try {
-        const { firstname, lastname, email, password } = req.body;
-        if ([firstname, lastname, email, password].map(el => el.trim()).some(el => !!!el)) {
-            return res.status(422).json({ error: 'missing fields' });
+if (config.SIGNUP) {
+    apiRouter.post('/signup', async (req, res) => {
+        try {
+            const { firstname, lastname, email, password } = req.body;
+            if ([firstname, lastname, email, password].map(el => el.trim()).some(el => !!!el)) {
+                return res.status(422).json({ error: 'missing fields' });
+            }
+            const existingAccount = await AccountModel.findOne({ email: email.toLowerCase() });
+            if (existingAccount) {
+                return res.sendStatus(409);
+            }
+            await AccountModel.create({ firstname, lastname, email, password });
+            res.sendStatus(201);
+        } catch (exc) {
+            res.sendStatus(500);
         }
-        const existingAccount = await AccountModel.findOne({ email: email.toLowerCase() });
-        if (existingAccount) {
-            return res.sendStatus(409);
-        }
-        await AccountModel.create({ firstname, lastname, email, password });
-        res.sendStatus(201);
-    } catch (exc) {
-        res.sendStatus(500);
-    }
-});
+    });
+}
 
 apiRouter.post('/signin', async (req, res) => {
     try {

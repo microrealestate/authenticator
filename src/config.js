@@ -10,5 +10,6 @@ module.exports = {
     REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET || 'refresh_token_secret',
     RESET_TOKEN_SECRET: process.env.RESET_TOKEN_SECRET || 'reset_token_secret',
     BASE_DB_URL: process.env.MONGO_URL || process.env.BASE_DB_URL || 'mongodb://localhost/sampledb',
+    SIGNUP: process.env.SIGNUP === 'true',
     DOMAIN: process.env.DOMAIN || 'localhost'
 };
