@@ -17,9 +17,11 @@ const refreshTokenCookieAttributes = {
 
 const _generateTokens = async (dbAccount) => {
   const { _id, password, ...account } = dbAccount;
-  const refreshToken = jwt.sign({ account }, config.REFRESH_TOKEN_SECRET);
+  const refreshToken = jwt.sign({ account }, config.REFRESH_TOKEN_SECRET, {
+    expiresIn: '1h',
+  });
   const accessToken = jwt.sign({ account }, config.ACCESS_TOKEN_SECRET, {
-    expiresIn: '5m',
+    expiresIn: '30s',
   });
 
   // save tokens
@@ -40,7 +42,6 @@ const _refreshTokens = async (oldRefreshToken) => {
 
   let account;
   try {
-    jwt.verify(oldAccessToken, config.ACCESS_TOKEN_SECRET);
     const payload = jwt.verify(oldRefreshToken, config.REFRESH_TOKEN_SECRET);
     if (payload && payload.account) {
       account = payload.account;
