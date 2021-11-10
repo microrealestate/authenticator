@@ -186,7 +186,7 @@ apiRouter.post('/forgotpassword', async (req, res) => {
 
       // send email
       await axios.post(
-        config.EMAILER_URL,
+        `${config.EMAILER_URL}/resetpassword`,
         {
           templateName: 'reset_password',
           recordId: email,
