@@ -1,6 +1,5 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
 const expressWinston = require('express-winston');
 const logger = require('winston');
 const mongoose = require('mongoose');
@@ -53,10 +52,10 @@ const startApplication = async (apiRouter) => {
   app.use(cookieParser());
 
   // parse application/x-www-form-urlencoded
-  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(express.urlencoded({ extended: false }));
 
   // parse application/json
-  app.use(bodyParser.json());
+  app.use(express.json());
 
   // expose api
   app.use(apiRouter);
